@@ -12,7 +12,8 @@ Customized CUPS driver for POS80 (80mm) thermal receipt printers, pre-configured
 - **Imageable Area:** 8–212 pt (margins calibrated to prevent left/right clipping)
 - **Default Paper Size:** `80 × 297 mm` (`X70MMY297MM`)
 - **Auto-Cutter:** Enabled (`EndOfJob`)
-- **Feed Spacing:** None (`FeedWhere=None`)
+- **Extra Feed:** None (`FeedWhere=None`)
+- **Feed Distance:** 3 mm (`FeedDist=0feed3mm`, inactive while Extra Feed is None)
 - **Blank Space at Page End:** False / None (`BlankSpace=False`)
 
 ---

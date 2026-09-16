@@ -61,23 +61,22 @@ echo "[4/6] Detecting connected POS80 USB printer..."
 PRINTER_URI="$1"
 
 if [ -z "$PRINTER_URI" ]; then
-  # Try to match STM32, Zjiang, AST, POS, or generic thermal printer USB URI
+  # Auto-detect specifically recognized POS80 thermal printer signatures
   PRINTER_URI=$(lpinfo -v 2>/dev/null | grep -i '^direct usb://' | grep -iE 'STM32|Zjiang|AST|POS|Thermal' | head -n1 | awk '{print $2}')
-  if [ -z "$PRINTER_URI" ]; then
-    # Fallback to any direct USB printer attached
-    PRINTER_URI=$(lpinfo -v 2>/dev/null | grep -i '^direct usb://' | head -n1 | awk '{print $2}')
-  fi
 fi
 
 if [ -z "$PRINTER_URI" ]; then
-  echo "[!] WARNING: No connected USB thermal printer was detected right now."
-  echo "    Driver filter and PPD have been successfully installed to CUPS."
-  echo "    Connect your printer via USB, turn it on, and run:"
-  echo "      sudo ./install-pos80.sh"
-  echo "    Or manually add it once plugged in:"
-  echo "      lpinfo -v | grep -i usb"
-  echo "      sudo lpadmin -p POS80 -E -v '<URI>' -P /usr/share/cups/model/zjiang/zj80.ppd"
-  echo "      sudo lpadmin -d POS80"
+  echo ""
+  echo "[!] WARNING: No recognized POS80 thermal printer was automatically detected."
+  echo "    Driver filter and PPD have been successfully compiled and installed."
+  echo ""
+  echo "    Attached USB printer devices found:"
+  lpinfo -v 2>/dev/null | grep -i '^direct usb://' || echo "    (None found - ensure printer is powered on and connected)"
+  echo ""
+  echo "    To complete setup, run:"
+  echo "      sudo ./install-pos80.sh '<PRINTER_URI>'"
+  echo "    Example:"
+  echo "      sudo ./install-pos80.sh 'usb://STMicroelectronics/STM32%20Virtual%20COM%20Port%20%20?serial=1A6422250000'"
   exit 0
 fi
 
