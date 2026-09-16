@@ -68,7 +68,7 @@ BlankSpace/Blank space at page's end: True *False
 
 Check active PPD values:
 ```bash
-grep -E 'cupsModelNumber|ImageableArea' /etc/cups/ppd/POS80.ppd
+sudo grep -E 'cupsModelNumber|ImageableArea' /etc/cups/ppd/POS80.ppd
 ```
 Expected output:
 ```text
