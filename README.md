@@ -35,7 +35,7 @@ The script automatically:
 1. Installs all required packages (`cups`, `build-essential`, `cmake`, `libcups2-dev`, `libcupsimage2-dev`, `git`).
 2. Starts and enables the CUPS service.
 3. Compiles and installs the `rastertozj` CUPS filter and customized `zj80.ppd`.
-4. Auto-detects the connected USB printer URI (compatible with STM32 Virtual COM Port, AST Research, and standard USB-to-serial thermal printers).
+4. Auto-detects supported USB printer URIs matching common POS80 identifiers (STM32, Zjiang, AST, POS, or Thermal).
 5. Creates the `POS80` queue, sets it as the system default destination, applies tested production options, and verifies the setup.
 
 ---
@@ -54,7 +54,7 @@ system default destination: POS80
 
 Check printer options:
 ```bash
-lpoptions -p POS80 -l | grep -E 'PageSize|CutMedia|Resolution|OptionCutter|FeedWhere|BlankSpace'
+lpoptions -p POS80 -l | grep -E 'PageSize|CutMedia|Resolution|OptionCutter|FeedWhere|FeedDist|BlankSpace'
 ```
 Expected output:
 ```text
@@ -62,6 +62,7 @@ PageSize/Media Size: X70MMY65MM X70MMY105MM X70MMY210MM *X70MMY297MM X70MMY3276M
 CutMedia/Cut Media: None EndOfPage *EndOfJob
 Resolution/Resolution: *203x203dpi
 OptionCutter/Cutter: False *True
+FeedDist/Feed distance: *0feed3mm 1feed6mm 2feed9mm 3feed12mm 4feed15mm 5feed18mm 6feed21mm 7feed24mm 8feed27mm 9feed30mm 10feed33mm 11feed36mm 12feed39mm 13feed42mm 14feed45mm
 FeedWhere/When to feed: *None AfterPage AfterJob
 BlankSpace/Blank space at page's end: True *False
 ```
