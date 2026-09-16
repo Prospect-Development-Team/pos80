@@ -20,9 +20,9 @@ VariablePaperSize Yes
 
 // cutter
 Option "CutMedia/Cut Media" PickOne AnySetup 10
- *Choice "None/No cutting" "<</CutMedia 0>>setpagedevice"
+  Choice "None/No cutting" "<</CutMedia 0>>setpagedevice"
   Choice "EndOfPage/Cut at every page" "<</CutMedia 4>>setpagedevice"
-  Choice "EndOfJob/Cut at every job" "<</CutMedia 2>>setpagedevice"
+ *Choice "EndOfJob/Cut at every job" "<</CutMedia 2>>setpagedevice"
 
 Option "Resolution/Resolution" PickOne AnySetup 10
  *Choice "203x203dpi/203 DPI Grayscale" "<</HWResolution[203 203]/cupsColorSpace 3>>setpagedevice"
@@ -49,9 +49,9 @@ Group "BlankGroup/Blank Options"
     Choice "14feed45mm/45mm" "<</AdvanceDistance 360>>setpagedevice"
 
   Option "FeedWhere/When to feed" PickOne AnySetup 10
-    Choice "None/Never" ""
+   *Choice "None/Never" ""
     Choice "AfterPage/After each page" "<</AdvanceMedia 4>>setpagedevice"
-   *Choice "AfterJob/After whole printing" "<</AdvanceMedia 2>>setpagedevice"
+    Choice "AfterJob/After whole printing" "<</AdvanceMedia 2>>setpagedevice"
 
   Option "BlankSpace/Blank space at page's end" Boolean AnySetup 10
     Choice "True/Print" "<</cupsInteger6 1>>setpagedevice"
@@ -181,18 +181,18 @@ Installable "OptionCutter/Cutter"
 // 80mm printers
 {
   #define POINTS 226
-  #define PIXELS 560
+  #define PIXELS 576
 
   // model num is used by filter to determine raster width. 58 -> 0x180, 80 -> 0x240.
   ModelNumber $PIXELS
   MinSize $POINTS 56
   MaxSize $POINTS 9286
 
- *CustomMedia "X70MMY65MM/80mm x 65mm" $POINTS 182 14 0 14 0 "<</PageSize[$POINTS 182]>>setpagedevice" "<</PageSize[$POINTS 182]>>setpagedevice"
-  CustomMedia "X70MMY105MM/80mm x 105mm" $POINTS 298 14 0 14 0 "<</PageSize[$POINTS 298]>>setpagedevice" "<</PageSize[$POINTS 298]>>setpagedevice"
-  CustomMedia "X70MMY210MM/80mm x 210mm" $POINTS 595 14 0 14 0 "<</PageSize[$POINTS 595]>>setpagedevice" "<</PageSize[$POINTS 595]>>setpagedevice"
-  CustomMedia "X70MMY297MM/80mm x 297mm" $POINTS 842 14 0 14 0 "<</PageSize[$POINTS 842]>>setpagedevice" "<</PageSize[$POINTS 842]>>setpagedevice"
-  CustomMedia "X70MMY3276MM/80mm x 3276mm" $POINTS 9286 14 0 14 0 "<</PageSize[$POINTS 9286]>>setpagedevice" "<</PageSize[$POINTS 9286]>>setpagedevice"
+  CustomMedia "X70MMY65MM/80mm x 65mm" $POINTS 182 8 0 14 0 "<</PageSize[$POINTS 182]>>setpagedevice" "<</PageSize[$POINTS 182]>>setpagedevice"
+  CustomMedia "X70MMY105MM/80mm x 105mm" $POINTS 298 8 0 14 0 "<</PageSize[$POINTS 298]>>setpagedevice" "<</PageSize[$POINTS 298]>>setpagedevice"
+  CustomMedia "X70MMY210MM/80mm x 210mm" $POINTS 595 8 0 14 0 "<</PageSize[$POINTS 595]>>setpagedevice" "<</PageSize[$POINTS 595]>>setpagedevice"
+ *CustomMedia "X70MMY297MM/80mm x 297mm" $POINTS 842 8 0 14 0 "<</PageSize[$POINTS 842]>>setpagedevice" "<</PageSize[$POINTS 842]>>setpagedevice"
+  CustomMedia "X70MMY3276MM/80mm x 3276mm" $POINTS 9286 8 0 14 0 "<</PageSize[$POINTS 9286]>>setpagedevice" "<</PageSize[$POINTS 9286]>>setpagedevice"
 
   // Zijiang ZJ-80
   {
