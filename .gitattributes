@@ -1,4 +1,5 @@
 * text=auto
 *.sh text eol=lf
+backend-pos80 text eol=lf
 *.ppd text eol=lf
 *.drv text eol=lf

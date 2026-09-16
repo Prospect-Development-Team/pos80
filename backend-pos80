@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# CUPS Dynamic Auto-Detect Backend for POS80 Thermal Printers
+# Discovers the currently connected compatible printer at runtime and forwards
+# the print job to the native CUPS USB backend without hardcoding serial numbers.
+# ==============================================================================
+
+CUPS_USB_BACKEND="/usr/lib/cups/backend/usb"
+
+# Discovery mode: called with 0 arguments by CUPS (e.g. lpinfo -v)
+if [ $# -eq 0 ]; then
+  echo 'direct pos80:/auto "Generic" "POS80 Dynamic Auto-Detect (Plug & Play)" "MFG:Zijiang;MDL:POS80;"'
+  exit 0
+fi
+
+# Print mode: called with 5 or 6 arguments
+# $1 = job-id
+# $2 = user
+# $3 = title
+# $4 = copies
+# $5 = options
+# $6 = print file (optional, otherwise stdin)
+
+MAX_RETRIES=6
+DETECTED_URI=""
+
+for ((i = 1; i <= MAX_RETRIES; i++)); do
+  if [ -x "$CUPS_USB_BACKEND" ]; then
+    # Look for supported thermal printer signatures (STM32, Zjiang, AST, POS, Thermal)
+    DETECTED_URI=$("$CUPS_USB_BACKEND" 2>/dev/null | grep -i '^direct usb://' | grep -iE 'STM32|Zjiang|AST|POS|Thermal' | head -n1 | awk '{print $2}')
+  fi
+
+  if [ -n "$DETECTED_URI" ]; then
+    break
+  fi
+
+  echo "INFO: Waiting for compatible POS80 thermal printer to be connected..." >&2
+  sleep 2
+done
+
+if [ -z "$DETECTED_URI" ]; then
+  echo "ERROR: No compatible POS80 thermal printer found on USB ports." >&2
+  # CUPS backend return code: 1 = CUPS_BACKEND_FAILED
+  exit 1
+fi
+
+# Set dynamic device URI for native CUPS backend and hand off execution
+export DEVICE_URI="$DETECTED_URI"
+exec "$CUPS_USB_BACKEND" "$@"

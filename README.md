@@ -35,8 +35,8 @@ The script automatically:
 1. Installs all required packages (`cups`, `build-essential`, `cmake`, `libcups2-dev`, `libcupsimage2-dev`, `git`).
 2. Starts and enables the CUPS service.
 3. Compiles and installs the `rastertozj` CUPS filter and customized `zj80.ppd`.
-4. Auto-detects supported USB printer URIs matching common POS80 identifiers (STM32, Zjiang, AST, POS, or Thermal).
-5. Creates the `POS80` queue, sets it as the system default destination, applies tested production options, and verifies the setup.
+4. Installs the dynamic auto-detect CUPS backend (`/usr/lib/cups/backend/pos80`).
+5. Creates the `POS80` queue with device URI `pos80:/auto`, sets it as the system default, and applies tested production options.
 
 ---
 
@@ -50,6 +50,15 @@ Expected output:
 ```text
 printer POS80 is idle. enabled since ...
 system default destination: POS80
+```
+
+Check assigned device URI:
+```bash
+lpstat -v POS80
+```
+Expected output:
+```text
+device for POS80: pos80:/auto
 ```
 
 Check printer options:
@@ -89,22 +98,22 @@ sudo apt update
 sudo apt install -y cups cups-client build-essential cmake libcups2-dev libcupsimage2-dev git
 sudo systemctl enable --now cups
 
-# 2. Build and install
+# 2. Build and install filter, PPD, and dynamic backend
 mkdir -p build && cd build
 cmake ..
 make
 sudo make install
 sudo cp ../zj80.ppd /usr/share/cups/model/zjiang/zj80.ppd
+sudo cp ../backend-pos80 /usr/lib/cups/backend/pos80
+sudo chmod 700 /usr/lib/cups/backend/pos80
+sudo chown root:root /usr/lib/cups/backend/pos80
 sudo systemctl restart cups
 
-# 3. Detect USB URI
-lpinfo -v | grep -i usb
-
-# 4. Create printer queue (replace <PRINTER_URI> with detected URI)
+# 3. Create printer queue with dynamic auto-detect URI
 sudo lpadmin -x POS80 2>/dev/null || true
-sudo lpadmin -p POS80 -E -v '<PRINTER_URI>' -P /usr/share/cups/model/zjiang/zj80.ppd
+sudo lpadmin -p POS80 -E -v "pos80:/auto" -P /usr/share/cups/model/zjiang/zj80.ppd
 
-# 5. Apply default options
+# 4. Apply default options
 sudo lpadmin -p POS80 \
   -o PageSize=X70MMY297MM \
   -o CutMedia=EndOfJob \
